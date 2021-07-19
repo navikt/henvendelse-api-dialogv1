@@ -48,7 +48,9 @@ spec:
       value: "p"
     - name: APP_VERSION
       value: "{{ version }}"
-    - name: SECURITYTOKENSERVICE_URL
+    - name: SECURITY_TOKEN_SERVICE_DISCOVERY_URL
+      value: "https://security-token-service.nais.adeo.no/rest/v1/sts/.well-known/openid-configuration"
+    - name: SECURITY_TOKEN_SERVICE_SAML_URL
       value: "https://security-token-service.nais.adeo.no/rest/v1/sts/ws/samltoken"
     - name: SECURITY_TOKEN_SERVICE_TOKEN_URL
       value: "https://security-token-service.nais.adeo.no/rest/v1/sts/token"

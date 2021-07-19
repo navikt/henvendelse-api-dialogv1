@@ -121,6 +121,10 @@
         </dependency>
         <dependency>
             <groupId>no.nav.common</groupId>
+            <artifactId>sts</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.common</groupId>
             <artifactId>test</artifactId>
             <scope>test</scope>
         </dependency>
