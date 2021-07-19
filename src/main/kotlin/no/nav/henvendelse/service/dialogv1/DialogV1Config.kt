@@ -14,18 +14,16 @@ class DialogV1Config {
     lateinit var stsConfig: StsConfig
 
     @Bean
-    fun dialogV1Porttype(): DialogV1 =
+    fun henvendelseDialogSource() = HenvendelseDialogSource(
         createDialogV1Porttype()
             .configureStsForSystemUser(stsConfig)
             .build()
-
-    @Bean
-    fun henvendelseDialogSource(dialogV1: DialogV1) = HenvendelseDialogSource(dialogV1)
+    )
 
     @Bean
     fun sfDialogSource() = SfDialogSource()
 
-    fun createDialogV1Porttype(): CXFClient<DialogV1> =
+    private fun createDialogV1Porttype(): CXFClient<DialogV1> =
         CXFClient(DialogV1::class.java)
             .wsdl("classpath:wsdl/no/nav/tjeneste/cirksomhet/dialog/v1/Binding.wsdl")
             .address(EnvironmentUtils.getRequiredProperty("HENVENDELSE_DIALOG_V1_URL"))
