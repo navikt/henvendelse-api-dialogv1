@@ -1,0 +1,11 @@
+{
+  "name": "pdl-api",
+  "schemaPath": "schema.graphql",
+  "extensions": {
+    "endpoints": {
+      "PDL GraphQL Endpoint": {
+        "introspect": false
+      }
+    }
+  }
+}
