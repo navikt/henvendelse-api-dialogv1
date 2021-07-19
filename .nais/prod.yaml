@@ -33,8 +33,7 @@ spec:
       cpu: 400m
       memory: 768Mi
   ingresses:
-    - https://app.adeo.no/henvendelse-api
-    - https://app.dev.adeo.no/henvendelse-api
+    - https://app.adeo.no/henvendelse-api-dialogv1
   replicas:
     min: 2
     max: 4
@@ -42,21 +41,8 @@ spec:
   vault:
     enabled: true
     paths:
-      - kvPath: /serviceuser/data/prod/srvhenvendelseapi
+      - kvPath: /serviceuser/data/prod/srvhenvendelseapidialogv1
         mountPath: /var/run/secrets/nais.io/service_user
-  azure:
-    application:
-      enabled: true
-      tenant: nav.no
-      claims:
-        extra:
-          - "NAVident"
-  accessPolicy:
-    inbound:
-      rules:
-        - application: salesforce
-          namespace: teamcrm
-          cluster: prod-external
   env:
     - name: APP_ENVIRONMENT_NAME
       value: "p"

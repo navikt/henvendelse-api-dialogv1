@@ -33,7 +33,7 @@ spec:
       cpu: 400m
       memory: 768Mi
   ingresses:
-    - https://modapp-{{ namespace }}.adeo.no/henvendelse-api-dialogv1
+    - https://app-{{ namespace }}.adeo.no/henvendelse-api-dialogv1
   replicas:
     min: 2
     max: 4
