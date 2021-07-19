@@ -1,0 +1,72 @@
+---
+kind: Application
+apiVersion: nais.io/v1alpha1
+metadata:
+  name: henvendelse-api
+  namespace: personoversikt
+  labels:
+    team: personoversikt
+spec:
+  image: "{{ image }}"
+  port: 8080
+  webproxy: true
+  secureLogs:
+    enabled: true
+  liveness:
+    path: henvendelse-api/internal/isAlive
+    initialDelay: 50
+    timeout: 1
+    periodSeconds: 5
+    failureThreshold: 10
+  prometheus:
+    enabled: true
+    path: henvendelse-api/internal/prometheus
+  readiness:
+    path: henvendelse-api/internal/isReady
+    initialDelay: 50
+    timeout: 1
+  resources:
+    limits:
+      cpu: 3000m
+      memory: 1024Mi
+    requests:
+      cpu: 400m
+      memory: 768Mi
+  ingresses:
+    - https://app.adeo.no/henvendelse-api
+    - https://app.dev.adeo.no/henvendelse-api
+  replicas:
+    min: 2
+    max: 4
+    cpuThresholdPercentage: 50
+  vault:
+    enabled: true
+    paths:
+      - kvPath: /serviceuser/data/prod/srvhenvendelseapi
+        mountPath: /var/run/secrets/nais.io/service_user
+  azure:
+    application:
+      enabled: true
+      tenant: nav.no
+      claims:
+        extra:
+          - "NAVident"
+  accessPolicy:
+    inbound:
+      rules:
+        - application: salesforce
+          namespace: teamcrm
+          cluster: prod-external
+  env:
+    - name: APP_ENVIRONMENT_NAME
+      value: "p"
+    - name: APP_VERSION
+      value: "{{ version }}"
+    - name: SECURITYTOKENSERVICE_URL
+      value: "https://security-token-service.nais.adeo.no/rest/v1/sts/ws/samltoken"
+    - name: SECURITY_TOKEN_SERVICE_TOKEN_URL
+      value: "https://security-token-service.nais.adeo.no/rest/v1/sts/token"
+    - name: HENVENDELSE_DIALOG_V1_URL
+      value: "https://modapp.adeo.no/henvendelse/services/domene.Virksomhet/Dialog_v1"
+    - name: CXF_SECURE_LOG
+      value: "enabled"
