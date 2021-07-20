@@ -124,6 +124,10 @@
             <artifactId>sts</artifactId>
         </dependency>
         <dependency>
+            <groupId>no.finn.unleash</groupId>
+            <artifactId>unleash-client-java</artifactId>
+        </dependency>
+        <dependency>
             <groupId>no.nav.common</groupId>
             <artifactId>test</artifactId>
             <scope>test</scope>
