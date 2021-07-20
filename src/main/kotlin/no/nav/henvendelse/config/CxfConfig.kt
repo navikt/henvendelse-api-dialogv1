@@ -1,5 +1,6 @@
 package no.nav.henvendelse.config
 
+import no.nav.henvendelse.consumer.unleash.UnleashService
 import no.nav.henvendelse.service.dialog.HenvendelseDialogService
 import no.nav.henvendelse.service.dialog.SfDialogService
 import no.nav.henvendelse.soap.DialogWs
@@ -12,9 +13,14 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class CxfConfig {
     @Bean
-    fun dialogV1(henvendelseSource: HenvendelseDialogService, sfSource: SfDialogService): DialogV1 = DialogWs(
+    fun dialogV1(
+        henvendelseSource: HenvendelseDialogService,
+        sfSource: SfDialogService,
+        unleashService: UnleashService
+    ): DialogV1 = DialogWs(
         henvendelseSource,
-        sfSource
+        sfSource,
+        unleashService
     )
 
     @Bean
