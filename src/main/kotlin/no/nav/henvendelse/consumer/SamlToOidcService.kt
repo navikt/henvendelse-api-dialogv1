@@ -1,4 +1,4 @@
-package no.nav.henvendelse.service
+package no.nav.henvendelse.consumer
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
@@ -120,14 +120,12 @@ class SamlToOidcService {
         map.add("subject_token_type", SUBJECT_TOKEN_TYPE_PARAM)
         map.add("subject_token", encodedSamlToken)
 
-        val request = HttpEntity(map, headers)
-        var tokenResponse: ResponseEntity<String>? = null
-        try {
-            tokenResponse = restTemplate.postForEntity("$stsUrl/exchange", request, String::class.java)
+        return try {
+            val request = HttpEntity(map, headers)
+            restTemplate.postForEntity("$stsUrl/exchange", request, String::class.java)
         } catch (e: RestClientException) {
             throw RuntimeException("Feilet i henting av OIDC-token", e)
         }
-        return tokenResponse
     }
 
     private fun getSamlAssertion(currentMessage: Message): String {

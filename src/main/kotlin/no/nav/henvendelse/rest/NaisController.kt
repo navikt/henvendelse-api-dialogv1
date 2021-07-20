@@ -1,8 +1,8 @@
 package no.nav.henvendelse.rest
 
+import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.health.selftest.SelfTestUtils
 import no.nav.common.health.selftest.SelftestHtmlGenerator
-import no.nav.henvendelse.utils.Pingable
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/internal")
 class NaisController {
     @Autowired
-    lateinit var pingables: List<Pingable>
+    lateinit var pingables: List<SelfTestCheck>
 
     @GetMapping("/isReady")
     fun isReady(): ResponseEntity<Void> = ResponseEntity.status(200).build()
@@ -24,7 +24,7 @@ class NaisController {
 
     @GetMapping("/selftest")
     fun selftest(): ResponseEntity<String> {
-        val result = SelfTestUtils.checkAll(pingables.map { it.ping() })
+        val result = SelfTestUtils.checkAll(pingables)
         return ResponseEntity
             .status(SelfTestUtils.findHttpStatusCode(result))
             .contentType(MediaType.TEXT_HTML)

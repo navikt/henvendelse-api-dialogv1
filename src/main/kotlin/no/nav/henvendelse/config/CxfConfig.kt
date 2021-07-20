@@ -1,7 +1,7 @@
 package no.nav.henvendelse.config
 
-import no.nav.henvendelse.service.dialogv1.HenvendelseDialogSource
-import no.nav.henvendelse.service.dialogv1.SfDialogSource
+import no.nav.henvendelse.service.dialog.HenvendelseDialogService
+import no.nav.henvendelse.service.dialog.SfDialogService
 import no.nav.henvendelse.soap.DialogWs
 import no.nav.henvendelse.soap.infra.SoapServlet
 import no.nav.tjeneste.virksomhet.dialog.v1.DialogV1
@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class CxfConfig {
     @Bean
-    fun dialogV1(henvendelseSource: HenvendelseDialogSource, sfSource: SfDialogSource): DialogV1 = DialogWs(
+    fun dialogV1(henvendelseSource: HenvendelseDialogService, sfSource: SfDialogService): DialogV1 = DialogWs(
         henvendelseSource,
         sfSource
     )

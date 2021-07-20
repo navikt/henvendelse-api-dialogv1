@@ -13,7 +13,6 @@ import no.nav.henvendelse.APPLICATION_NAME
 import no.nav.henvendelse.SERVICEUSER_PASSWORD_PROPERTY
 import no.nav.henvendelse.SERVICEUSER_USERNAME_PROPERTY
 import no.nav.henvendelse.common.TruststoreCheck
-import no.nav.henvendelse.utils.Pingable
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -36,22 +35,20 @@ class ApplicationConfig {
     )
 
     @Bean
-    fun systemUserTokenProviderCheck(provider: SystemUserTokenProvider) = Pingable {
-        SelfTestCheck(
-            "SystemUserTokenProvider",
-            true
-        ) {
-            try {
-                requireNotNull(provider.systemUserToken)
-                HealthCheckResult.healthy()
-            } catch (e: Exception) {
-                HealthCheckResult.unhealthy(e)
-            }
+    fun systemUserTokenProviderCheck(provider: SystemUserTokenProvider) = SelfTestCheck(
+        "SystemUserTokenProvider",
+        true
+    ) {
+        try {
+            requireNotNull(provider.systemUserToken)
+            HealthCheckResult.healthy()
+        } catch (e: Exception) {
+            HealthCheckResult.unhealthy(e)
         }
     }
 
     @Bean
-    fun truststoreCheck(): Pingable = TruststoreCheck.create()
+    fun truststoreCheck(): SelfTestCheck = TruststoreCheck.create()
 
     @Bean
     fun logFilter(): FilterRegistrationBean<LogFilter> {

@@ -5,21 +5,15 @@ import no.nav.common.health.selftest.SelfTestCheck
 
 inline fun <reified T> CXFClient() = no.nav.common.cxf.CXFClient(T::class.java)
 
-fun interface Pingable {
-    fun ping(): SelfTestCheck
-}
-
-fun createPingable(
+fun createSelfTestCheck(
     description: String,
     critical: Boolean,
     test: () -> Unit
-) = Pingable {
-    SelfTestCheck(description, critical) {
-        try {
-            test()
-            HealthCheckResult.healthy()
-        } catch (throwable: Throwable) {
-            HealthCheckResult.unhealthy(throwable)
-        }
+) = SelfTestCheck(description, critical) {
+    try {
+        test()
+        HealthCheckResult.healthy()
+    } catch (throwable: Throwable) {
+        HealthCheckResult.unhealthy(throwable)
     }
 }
