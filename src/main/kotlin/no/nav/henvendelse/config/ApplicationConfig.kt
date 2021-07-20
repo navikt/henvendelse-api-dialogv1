@@ -43,7 +43,7 @@ class ApplicationConfig {
             requireNotNull(provider.systemUserToken)
             HealthCheckResult.healthy()
         } catch (e: Exception) {
-            HealthCheckResult.unhealthy(e)
+            HealthCheckResult.unhealthy(Exception("Kunne ikke hente ut STS token", e))
         }
     }
 
