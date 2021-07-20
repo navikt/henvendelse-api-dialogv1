@@ -6,6 +6,7 @@ import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.henvendelse.APPLICATION_NAME
 import no.nav.henvendelse.consumer.pdl.queries.HentAktorId
+import no.nav.henvendelse.utils.FileUtils
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -72,11 +73,8 @@ class PdlService(val httpClient: OkHttpClient, val stsService: SystemUserTokenPr
 
     companion object {
         fun lastQueryFraFil(name: String): String {
-            return GraphQLClient::class.java
-                .getResource("/pdl/$name.graphql")
-                ?.readText()
-                ?.replace("[\n\r]", "")
-                ?: throw IllegalStateException("Could not find query: $name")
+            return FileUtils.readFileContent("/pdl/$name.graphql")
+                .replace("[\n\r]", "")
         }
     }
 }
