@@ -21,6 +21,7 @@
         <common.version>2.2020.08.03_12.26-bf51ea003411</common.version>
         <tjenestespesifikasjoner.version>2558.a410ffd</tjenestespesifikasjoner.version>
         <springfox.version>2.9.2</springfox.version>
+        <graphql-kotlin.version>3.6.8</graphql-kotlin.version>
     </properties>
 
     <dependencyManagement>
@@ -123,29 +124,32 @@
             <groupId>no.nav.common</groupId>
             <artifactId>sts</artifactId>
         </dependency>
+
+        <!-- Extras -->
         <dependency>
             <groupId>no.finn.unleash</groupId>
             <artifactId>unleash-client-java</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-
-        <!-- Kotlin -->
-        <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.expediagroup</groupId>
+            <artifactId>graphql-kotlin-client</artifactId>
+            <version>${graphql-kotlin.version}</version>
+        </dependency>
 
         <!-- Testing -->
+        <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>test</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
             <artifactId>wiremock-standalone</artifactId>
@@ -154,6 +158,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.ninja-squad</groupId>
@@ -165,6 +170,7 @@
             <groupId>com.willowtreeapps.assertk</groupId>
             <artifactId>assertk-jvm</artifactId>
             <version>0.24</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -184,6 +190,34 @@
         <testSourceDirectory>src/test/kotlin</testSourceDirectory>
         <finalName>${project.artifactId}</finalName>
         <plugins>
+            <plugin>
+                <groupId>com.expediagroup</groupId>
+                <artifactId>graphql-kotlin-maven-plugin</artifactId>
+                <version>${graphql-kotlin.version}</version>
+                <executions>
+                    <execution>
+                        <id>download schema from github</id>
+                        <goals>
+                            <goal>download-sdl</goal>
+                        </goals>
+                        <configuration>
+                            <endpoint>https://navikt.github.io/pdl/pdl-api-sdl.graphqls</endpoint>
+                            <outputDirectory>src/main/resources/pdl</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate kotlin classes from schema + queries</id>
+                        <goals>
+                            <goal>generate-client</goal>
+                        </goals>
+                        <configuration>
+                            <schemaFile>src/main/resources/pdl/schema.graphql</schemaFile>
+                            <packageName>no.nav.henvendelse.consumer.pdl.generated</packageName>
+                            <queryFileDirectory>src/main/resources/pdl/queries</queryFileDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

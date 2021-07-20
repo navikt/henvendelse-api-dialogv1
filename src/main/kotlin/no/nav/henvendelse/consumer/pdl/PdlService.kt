@@ -1,54 +1,50 @@
 package no.nav.henvendelse.consumer.pdl
 
+import com.expediagroup.graphql.client.GraphQLClient
+import io.ktor.client.engine.cio.*
+import io.ktor.client.request.*
+import io.ktor.util.*
+import kotlinx.coroutines.runBlocking
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
+import no.nav.common.log.MDCConstants
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.henvendelse.APPLICATION_NAME
-import no.nav.henvendelse.consumer.pdl.queries.HentAktorId
-import no.nav.henvendelse.utils.FileUtils
+import no.nav.henvendelse.consumer.pdl.generated.HentAktorId
+import no.nav.henvendelse.utils.JacksonUtils
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.slf4j.MDC
+import java.net.URL
+import java.util.*
 
-class PdlException(message: String, cause: Throwable) : RuntimeException(message, cause)
+class PdlException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)
 
+@KtorExperimentalAPI
 class PdlService(val httpClient: OkHttpClient, val stsService: SystemUserTokenProvider) {
     private val pdlUrl: String = EnvironmentUtils.getRequiredProperty("PDL_URL")
-    private val graphQLClient = GraphQLClient(
-        httpClient = httpClient,
-        config = GraphQLClientConfig(
-            tjenesteNavn = "PDL",
-            requestConfig = {
-                callId ->
+    private val graphQLClient = GraphQLClient(URL(pdlUrl), CIO, JacksonUtils.objectMapper) {}
 
-                url(pdlUrl)
-                addHeader("Nav-Call-Id", callId)
-                addHeader("Nav-Consumer-Id", APPLICATION_NAME)
-                addHeader("Nav-Consumer-Token", "Bearer ${stsService.systemUserToken}")
-                addHeader("Authorization", "Bearer ${stsService.systemUserToken}")
-                addHeader("Tema", "GEN")
-            }
-        )
-    )
+    fun hentAktorId(fnr: String): List<String> = runBlocking {
+        val response = HentAktorId(graphQLClient).execute(HentAktorId.Variables(fnr), systemTokenHeaders)
+        if (response.errors != null) {
+            throw PdlException(response.errors.toString())
+        }
+        response
+            .data
+            ?.hentIdenter
+            ?.identer
+            ?.map { it.ident }
+            ?: throw PdlException("AktørId for $fnr ble ikke funnet")
+    }
 
-    fun hentAktorId(fnr: String): List<String> {
-        return graphQLClient
-            .runCatching {
-                execute(
-                    HentAktorId(
-                        HentAktorId.Variables(fnr)
-                    )
-                )
-            }
-            .mapCatching { response ->
-                response
-                    .data
-                    ?.hentIdenter
-                    ?.identer
-                    ?.map { it.ident }
-                    ?: throw IllegalStateException("Fant ingen identer for $fnr")
-            }
-            .getOrThrow { PdlException("Kunne ikke hente aktorId for $fnr", it) }
+    private val systemTokenHeaders: HttpRequestBuilder.() -> Unit = {
+        val systemuserToken: String = stsService.systemUserToken
+
+        header("Nav-Consumer-Token", "Bearer $systemuserToken")
+        header("Authorization", "Bearer $systemuserToken")
+        header("Tema", "GEN")
+        header("Nav-Call-Id", MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString())
     }
 
     val selftestCheck = SelfTestCheck("PDL", true) {
@@ -70,19 +66,4 @@ class PdlService(val httpClient: OkHttpClient, val stsService: SystemUserTokenPr
             .also { runCatching { it.close() } }
             .code()
     }
-
-    companion object {
-        fun lastQueryFraFil(name: String): String {
-            return FileUtils.readFileContent("/pdl/$name.graphql")
-                .replace("[\n\r]", "")
-        }
-    }
-}
-
-private inline fun <T> Result<T>.getOrThrow(fn: (Throwable) -> Throwable): T {
-    val exception = exceptionOrNull()
-    if (exception != null) {
-        throw fn(exception)
-    }
-    return getOrThrow()
 }

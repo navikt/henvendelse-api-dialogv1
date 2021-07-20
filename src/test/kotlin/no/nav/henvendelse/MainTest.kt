@@ -1,5 +1,6 @@
 package no.nav.henvendelse
 
+import com.expediagroup.graphql.types.GraphQLResponse
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.nimbusds.jwt.JWTClaimsSet
@@ -8,8 +9,7 @@ import no.nav.common.json.JsonUtils
 import no.nav.common.nais.NaisYamlUtils.loadFromYaml
 import no.nav.common.test.ssl.SSLTestUtils
 import no.nav.common.utils.SslUtils
-import no.nav.henvendelse.consumer.pdl.GraphQLResponse
-import no.nav.henvendelse.consumer.pdl.queries.HentAktorId
+import no.nav.henvendelse.consumer.pdl.generated.HentAktorId
 import org.springframework.boot.SpringApplication
 import java.util.*
 
