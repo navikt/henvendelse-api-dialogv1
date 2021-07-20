@@ -1,8 +1,7 @@
-Henvendelse-api
+Henvendelse-api-dialogv1
 ==================
 
 Rest-api for kall til henvendelse sine soap tjenester.
-Tjenestene som er eksponert kan ses via swagger siden: `/henvendelse-api/swagger-ui.html` 
 
 
 ## Henvendelser

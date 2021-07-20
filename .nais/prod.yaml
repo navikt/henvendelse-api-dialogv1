@@ -2,7 +2,7 @@
 kind: Application
 apiVersion: nais.io/v1alpha1
 metadata:
-  name: henvendelse-api
+  name: henvendelse-api-dialogv1
   namespace: personoversikt
   labels:
     team: personoversikt
@@ -13,16 +13,16 @@ spec:
   secureLogs:
     enabled: true
   liveness:
-    path: henvendelse-api/internal/isAlive
+    path: henvendelse-api-dialogv1/internal/isAlive
     initialDelay: 50
     timeout: 1
     periodSeconds: 5
     failureThreshold: 10
   prometheus:
     enabled: true
-    path: henvendelse-api/internal/prometheus
+    path: henvendelse-api-dialogv1/internal/prometheus
   readiness:
-    path: henvendelse-api/internal/isReady
+    path: henvendelse-api-dialogv1/internal/isReady
     initialDelay: 50
     timeout: 1
   resources:
