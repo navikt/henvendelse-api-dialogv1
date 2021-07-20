@@ -32,7 +32,7 @@ class HenvendelseConfig {
             .build()
             .let { porttype ->
                 createSelfTestCheck(
-                    description = "DialogV1PortType",
+                    description = "Henvendelse - DialogV1",
                     critical = true,
                     test = { porttype.ping() }
                 )
