@@ -41,7 +41,7 @@ spec:
   vault:
     enabled: true
     paths:
-      - kvPath: /serviceuser/data/prod/srvhenvendelseapidialogv1
+      - kvPath: /serviceuser/data/prod/srvhenvendelsedialog
         mountPath: /var/run/secrets/nais.io/service_user
   env:
     - name: APP_ENVIRONMENT_NAME
