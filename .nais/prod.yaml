@@ -56,5 +56,7 @@ spec:
       value: "https://security-token-service.nais.adeo.no/rest/v1/sts/token"
     - name: HENVENDELSE_DIALOG_V1_URL
       value: "https://modapp.adeo.no/henvendelse/services/domene.Virksomhet/Dialog_v1"
+    - name: PDL_URL
+      value: "https://pdl-api.nais.adeo.no/graphql"
     - name: CXF_SECURE_LOG
       value: "enabled"

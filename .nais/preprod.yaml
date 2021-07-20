@@ -33,7 +33,7 @@ spec:
       cpu: 400m
       memory: 768Mi
   ingresses:
-    - https://app-{{ namespace }}.adeo.no/henvendelse-api-dialogv1
+    - https://app-q1.adeo.no/henvendelse-api-dialogv1
   replicas:
     min: 2
     max: 4
@@ -45,7 +45,7 @@ spec:
         mountPath: /var/run/secrets/nais.io/service_user
   env:
     - name: APP_ENVIRONMENT_NAME
-      value: "{{ namespace }}"
+      value: "q1"
     - name: APP_VERSION
       value: "{{ version }}"
     - name: SECURITY_TOKEN_SERVICE_DISCOVERY_URL
@@ -55,6 +55,8 @@ spec:
     - name: SECURITY_TOKEN_SERVICE_TOKEN_URL
       value: "https://security-token-service.nais.preprod.local/rest/v1/sts/token"
     - name: HENVENDELSE_DIALOG_V1_URL
-      value: "https://modapp-{{ namespace }}.adeo.no/henvendelse/services/domene.Virksomhet/Dialog_v1"
+      value: "https://modapp-q1.adeo.no/henvendelse/services/domene.Virksomhet/Dialog_v1"
+    - name: PDL_URL
+      value: "https://pdl-api.nais.preprod.local/graphql"
     - name: CXF_SECURE_LOG
       value: "enabled"
