@@ -1,8 +1,8 @@
 package no.nav.henvendelse.config
 
-import no.nav.henvendelse.service.unleash.UnleashService
 import no.nav.henvendelse.service.dialog.HenvendelseDialogService
 import no.nav.henvendelse.service.dialog.SfDialogService
+import no.nav.henvendelse.service.unleash.UnleashService
 import no.nav.henvendelse.soap.DialogWs
 import no.nav.henvendelse.soap.infra.SoapServlet
 import no.nav.tjeneste.virksomhet.dialog.v1.DialogV1

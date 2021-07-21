@@ -26,10 +26,11 @@ class KodeverkConfig {
     @Bean
     fun kodeverkServicePing(kodeverkService: KodeverkService) = SelfTestCheck(
         "Kodeverk",
-        true) {
+        true
+    ) {
         if (kodeverkService.error == null) {
             HealthCheckResult.healthy()
-        }else {
+        } else {
             HealthCheckResult.unhealthy("Kunne ikke hente kodeverk", kodeverkService.error)
         }
     }

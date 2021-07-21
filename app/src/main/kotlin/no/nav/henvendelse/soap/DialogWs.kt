@@ -1,9 +1,9 @@
 package no.nav.henvendelse.soap
 
-import no.nav.henvendelse.service.unleash.UnleashService
 import no.nav.henvendelse.service.dialog.DialogV1Service
 import no.nav.henvendelse.service.dialog.HenvendelseDialogService
 import no.nav.henvendelse.service.dialog.SfDialogService
+import no.nav.henvendelse.service.unleash.UnleashService
 import no.nav.tjeneste.virksomhet.dialog.v1.DialogV1
 import no.nav.tjeneste.virksomhet.dialog.v1.informasjon.WSDialog
 import no.nav.tjeneste.virksomhet.dialog.v1.meldinger.WSHentDialogerRequest
