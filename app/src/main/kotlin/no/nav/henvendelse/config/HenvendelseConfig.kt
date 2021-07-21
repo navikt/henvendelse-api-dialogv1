@@ -1,4 +1,4 @@
-package no.nav.henvendelse.consumer.henvendelse
+package no.nav.henvendelse.config
 
 import no.nav.common.cxf.CXFClient
 import no.nav.common.cxf.StsConfig

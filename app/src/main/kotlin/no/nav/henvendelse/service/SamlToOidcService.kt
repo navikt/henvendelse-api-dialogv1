@@ -1,4 +1,4 @@
-package no.nav.henvendelse.consumer
+package no.nav.henvendelse.service
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser

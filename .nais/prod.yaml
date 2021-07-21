@@ -58,6 +58,8 @@ spec:
       value: "https://modapp.adeo.no/henvendelse/services/domene.Virksomhet/Dialog_v1"
     - name: SF_HENVENDELSE_URL
       value: ""
+    - name: KODEVERK_URL
+      value: ""
     - name: PDL_URL
       value: "https://pdl-api.nais.adeo.no/graphql"
     - name: UNLEASH_API_URL

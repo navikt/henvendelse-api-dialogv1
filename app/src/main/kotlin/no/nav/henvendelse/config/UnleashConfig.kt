@@ -2,8 +2,8 @@ package no.nav.henvendelse.config
 
 import no.finn.unleash.FakeUnleash
 import no.nav.common.health.selftest.SelfTestCheck
-import no.nav.henvendelse.consumer.unleash.UnleashService
-import no.nav.henvendelse.consumer.unleash.UnleashServiceImpl
+import no.nav.henvendelse.service.unleash.UnleashService
+import no.nav.henvendelse.service.unleash.UnleashServiceImpl
 import no.nav.henvendelse.utils.unleash.ByEnvironmentStrategy
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

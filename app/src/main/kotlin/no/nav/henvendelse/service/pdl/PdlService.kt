@@ -1,4 +1,4 @@
-package no.nav.henvendelse.consumer.pdl
+package no.nav.henvendelse.service.pdl
 
 import com.expediagroup.graphql.client.GraphQLClient
 import io.ktor.client.engine.cio.*

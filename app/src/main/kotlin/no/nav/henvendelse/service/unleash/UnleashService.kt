@@ -1,4 +1,4 @@
-package no.nav.henvendelse.consumer.unleash
+package no.nav.henvendelse.service.unleash
 
 import no.finn.unleash.DefaultUnleash
 import no.finn.unleash.Unleash
