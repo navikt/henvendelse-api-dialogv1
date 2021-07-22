@@ -15,6 +15,9 @@ class Application
 
 val log: Logger = LoggerFactory.getLogger(Application::class.java)
 fun main(args: Array<String>) {
+    // Java 9+ krever avhengigheten jaxws-ri som bruker deprecated service mechanism (javax.xml.soap.MetaFactory). Overrider den manuelt her.
+    System.setProperty("javax.xml.soap.SAAJMetaFactory", "com.sun.xml.messaging.saaj.soap.SAAJMetaFactoryImpl")
+
     loadVaultSecrets()
     SslUtils.setupTruststore()
     runApplication<Application>(*args)
