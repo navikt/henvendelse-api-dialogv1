@@ -38,10 +38,12 @@ class HenvendelseConfig {
                 )
             }
 
-    private fun createDialogV1Porttype(): CXFClient<DialogV1> =
-        CXFClient<DialogV1>()
-            .wsdl("classpath:wsdl/no/nav/tjeneste/virksomhet/dialog/v1/Binding.wsdl")
-            .address(EnvironmentUtils.getRequiredProperty("HENVENDELSE_DIALOG_V1_URL"))
-            .serviceName(QName("http://nav.no/tjeneste/virksomhet/dialog/v1/Binding", "Dialog_v1"))
-            .endpointName(QName("http://nav.no/tjeneste/virksomhet/dialog/v1/Binding", "Dialog_v1Port"))
+    companion object {
+        fun createDialogV1Porttype(): CXFClient<DialogV1> =
+            CXFClient<DialogV1>()
+                .wsdl("classpath:wsdl/no/nav/tjeneste/virksomhet/dialog/v1/Binding.wsdl")
+                .address(EnvironmentUtils.getRequiredProperty("HENVENDELSE_DIALOG_V1_URL"))
+                .serviceName(QName("http://nav.no/tjeneste/virksomhet/dialog/v1/Binding", "Dialog_v1"))
+                .endpointName(QName("http://nav.no/tjeneste/virksomhet/dialog/v1/Binding", "Dialog_v1Port"))
+    }
 }
