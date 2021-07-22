@@ -25,7 +25,7 @@ class DebugController {
         return henvendelse.hentDialoger(fnr, 5)
     }
 
-    @GetMapping("/henvendelse")
+    @GetMapping("/salesforce")
     fun hentFraSalesforce(@RequestParam("fnr") fnr: String): List<WSDialog> {
         assertNotProd()
         return sfHenvendelse.hentDialoger(fnr, 5)
