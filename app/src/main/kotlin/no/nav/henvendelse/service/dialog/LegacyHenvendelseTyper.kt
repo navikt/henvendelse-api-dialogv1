@@ -15,10 +15,10 @@ enum class LegacyHenvendelseTyper(val behandlingsType: String) {
     companion object {
         fun from(henvendelse: HenvendelseDTO, melding: MeldingDTO): LegacyHenvendelseTyper {
             val erForsteMelding = henvendelse.meldinger?.firstOrNull() == melding
-            return when (requireNotNull(henvendelse.henvendelseType)) {
+            return when (henvendelse.henvendelseType) {
                 HenvendelseDTO.HenvendelseType.SAMTALEREFERAT -> REFERAT_TELEFON // TODO trenger kanal fra SF her
                 HenvendelseDTO.HenvendelseType.MELDINGSKJEDE -> {
-                    when (requireNotNull(melding.fra?.identType)) {
+                    when (melding.fra.identType) {
                         MeldingFraDTO.IdentType.AKTORID -> if (erForsteMelding) SPORSMAL_SKRIFTLIG else SVAR_SBL_INNGAAENDE
                         MeldingFraDTO.IdentType.NAVIDENT -> if (erForsteMelding) SPORSMAL_MODIA_UTGAAENDE else SVAR_SKRIFTLIG
                     }

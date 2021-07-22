@@ -35,7 +35,7 @@ class SfDialogService(
             .asSequence()
             .sortedByDescending {
                 (it.meldinger ?: emptyList())
-                    .maxByOrNull { melding -> requireNotNull(melding.sendtDato) }
+                    .maxByOrNull { melding -> melding.sendtDato }
                     ?.sendtDato
             }
             .filter(::erIkkeKassert)
@@ -48,36 +48,32 @@ class SfDialogService(
     }
 
     private fun tilDialog(fnr: String, henvendelseDTO: HenvendelseDTO): WSDialog {
-        val sisteMeldingDTO: MeldingDTO = requireNotNull(
-            henvendelseDTO.meldinger?.maxByOrNull { requireNotNull(it.sendtDato) }
-        )
-        val fraBruker = sisteMeldingDTO.fra?.identType == MeldingFraDTO.IdentType.AKTORID
+        // TODO Hva betyr det at meldinger er null? Kan vi anta tom liste? Vil det kunne skje?
+        val sisteMeldingDTO: MeldingDTO = requireNotNull(henvendelseDTO.meldinger?.maxByOrNull { it.sendtDato })
+
+        val fraBruker = sisteMeldingDTO.fra.identType == MeldingFraDTO.IdentType.AKTORID
 
         val legacyHenvendelseTyper = LegacyHenvendelseTyper.from(henvendelseDTO, sisteMeldingDTO)
         val henvendelsetype = WSHenvendelsestyper()
             .withValue(legacyHenvendelseTyper.behandlingsType)
             .withTermnavn(kodeverkService.hentVerdi(Kodeverk.BEHANDLINGSTYPER, legacyHenvendelseTyper.behandlingsType))
-        val temagruppe: WSTemagrupper = requireNotNull(henvendelseDTO.gjeldendeTemagruppe)
-            .let {
-                WSTemagrupper()
-                    .withValue(it)
-                    .withTermnavn(kodeverkService.hentVerdi(Kodeverk.TEMAGRUPPER, it))
-            }
 
-        val arkivtema: WSArkivtemaer = requireNotNull(henvendelseDTO.gjeldendeTema)
-            .let {
-                WSArkivtemaer()
-                    .withValue(it)
-                    .withTermnavn(kodeverkService.hentVerdi(Kodeverk.ARKIVTEMAER, it))
-            }
+        val temagruppe: WSTemagrupper = WSTemagrupper()
+            .withValue(henvendelseDTO.gjeldendeTemagruppe)
+            .withTermnavn(kodeverkService.hentVerdi(Kodeverk.TEMAGRUPPER, henvendelseDTO.gjeldendeTemagruppe))
+
+        val arkivtema: WSArkivtemaer = WSArkivtemaer()
+            .withValue(henvendelseDTO.gjeldendeTema)
+            .withTermnavn(kodeverkService.hentVerdi(Kodeverk.ARKIVTEMAER, henvendelseDTO.gjeldendeTema))
 
         return WSDialog()
+            // TODO Hva betyr det at kjedeId er null? Er det mulig? Samtalereferat?
             .withBehandlingsKjedeId(requireNotNull(henvendelseDTO.kjedeId))
             .withHenvendelsestype(henvendelsetype)
-            .withSisteDialogDato(requireNotNull(sisteMeldingDTO.sendtDato).toJodaDateTime())
+            .withSisteDialogDato(sisteMeldingDTO.sendtDato.toJodaDateTime())
             .withTemagruppe(temagruppe)
             .withArkivtema(arkivtema)
-            .withEnhet(if (fraBruker) fnr else TODO("Mangler felt fra SF"))
+            .withEnhet(if (fraBruker) fnr else sisteMeldingDTO.fra.navEnhet)
     }
 
     private fun OffsetDateTime.toJodaDateTime(): DateTime {
