@@ -1,5 +1,6 @@
 package no.nav.henvendelse.soap
 
+import no.nav.common.auth.subject.IdentType
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.henvendelse.log
 import no.nav.henvendelse.service.dialog.DialogV1Service
@@ -32,6 +33,7 @@ class DialogWs(
 
     override fun ping() {
         val ident = SubjectHandler.getIdent().orElse("N/A")
-        log.info("Ping gjort av $ident")
+        val identtype = SubjectHandler.getIdentType().map(IdentType::toString).orElse("N/A")
+        log.info("Ping gjort av $ident ($identtype)")
     }
 }
