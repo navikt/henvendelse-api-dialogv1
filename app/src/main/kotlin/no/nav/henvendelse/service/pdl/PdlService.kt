@@ -3,7 +3,6 @@ package no.nav.henvendelse.service.pdl
 import com.expediagroup.graphql.client.GraphQLClient
 import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
-import io.ktor.util.*
 import kotlinx.coroutines.runBlocking
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
@@ -15,6 +14,7 @@ import no.nav.henvendelse.utils.JacksonUtils
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.slf4j.MDC
+import org.springframework.cache.annotation.Cacheable
 import java.net.URL
 import java.util.*
 
@@ -24,6 +24,7 @@ class PdlService(private val httpClient: OkHttpClient, private val stsService: S
     private val pdlUrl: String = EnvironmentUtils.getRequiredProperty("PDL_URL")
     private val graphQLClient = GraphQLClient(URL(pdlUrl), CIO, JacksonUtils.objectMapper) {}
 
+    @Cacheable("pdl-aktorider")
     fun hentAktorIder(fnr: String): List<String> = runBlocking {
         val response = HentAktorId(graphQLClient).execute(HentAktorId.Variables(fnr), systemTokenHeaders)
         if (response.errors != null) {
