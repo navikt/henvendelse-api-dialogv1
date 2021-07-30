@@ -22,7 +22,7 @@ object AuthUtils {
 
     fun assertNotProd() {
         val assumedProd = EnvironmentUtils.isProduction().orElse(true)
-        if (!assumedProd) {
+        if (assumedProd) {
             throw NotAuthorizedException("Operasjon kan bare teses i preprod")
         }
     }
