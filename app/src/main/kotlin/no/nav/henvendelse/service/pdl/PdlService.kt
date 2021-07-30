@@ -20,12 +20,13 @@ import java.util.*
 
 class PdlException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)
 
-class PdlService(private val httpClient: OkHttpClient, private val stsService: SystemUserTokenProvider) {
+// TODO finn ut hvorfor kotlin-maven-allopen ikke fikser dette
+open class PdlService(private val httpClient: OkHttpClient, private val stsService: SystemUserTokenProvider) {
     private val pdlUrl: String = EnvironmentUtils.getRequiredProperty("PDL_URL")
     private val graphQLClient = GraphQLClient(URL(pdlUrl), CIO, JacksonUtils.objectMapper) {}
 
     @Cacheable("pdl-aktorider")
-    fun hentAktorIder(fnr: String): List<String> = runBlocking {
+    open fun hentAktorIder(fnr: String): List<String> = runBlocking {
         val response = HentAktorId(graphQLClient).execute(HentAktorId.Variables(fnr), systemTokenHeaders)
         if (response.errors != null) {
             throw PdlException(response.errors.toString())
