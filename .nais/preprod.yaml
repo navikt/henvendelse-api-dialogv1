@@ -61,7 +61,7 @@ spec:
     - name: KODEVERK_URL
       value: "https://kodeverk.nais.preprod.local/"
     - name: PDL_URL
-      value: "https://pdl-api.nais.preprod.local/graphql"
+      value: "https://pdl-api-q1.dev.intern.nav.no/graphql"
     - name: UNLEASH_API_URL
       value: "https://unleash.nais.io/api/"
     - name: CXF_SECURE_LOG
