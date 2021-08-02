@@ -2,7 +2,7 @@
 kind: Application
 apiVersion: nais.io/v1alpha1
 metadata:
-  name: henvendelse-api
+  name: henvendelse-api-dialogv1
   namespace: personoversikt
   labels:
     team: personoversikt
@@ -13,16 +13,16 @@ spec:
   secureLogs:
     enabled: true
   liveness:
-    path: henvendelse-api/internal/isAlive
+    path: henvendelse-api-dialogv1/internal/isAlive
     initialDelay: 50
     timeout: 1
     periodSeconds: 5
     failureThreshold: 10
   prometheus:
     enabled: true
-    path: henvendelse-api/internal/prometheus
+    path: henvendelse-api-dialogv1/internal/prometheus
   readiness:
-    path: henvendelse-api/internal/isReady
+    path: henvendelse-api-dialogv1/internal/isReady
     initialDelay: 50
     timeout: 1
   resources:
@@ -33,8 +33,7 @@ spec:
       cpu: 400m
       memory: 768Mi
   ingresses:
-    - https://app.adeo.no/henvendelse-api
-    - https://app.dev.adeo.no/henvendelse-api
+    - https://app.adeo.no/henvendelse-api-dialogv1
   replicas:
     min: 2
     max: 4
@@ -42,31 +41,28 @@ spec:
   vault:
     enabled: true
     paths:
-      - kvPath: /serviceuser/data/prod/srvhenvendelseapi
+      - kvPath: /serviceuser/data/prod/srvhenvendelsedialog
         mountPath: /var/run/secrets/nais.io/service_user
-  azure:
-    application:
-      enabled: true
-      tenant: nav.no
-      claims:
-        extra:
-          - "NAVident"
-  accessPolicy:
-    inbound:
-      rules:
-        - application: salesforce
-          namespace: teamcrm
-          cluster: prod-external
   env:
     - name: APP_ENVIRONMENT_NAME
       value: "p"
     - name: APP_VERSION
       value: "{{ version }}"
-    - name: SECURITYTOKENSERVICE_URL
+    - name: SECURITY_TOKEN_SERVICE_DISCOVERY_URL
+      value: "https://security-token-service.nais.adeo.no/rest/v1/sts/.well-known/openid-configuration"
+    - name: SECURITY_TOKEN_SERVICE_SAML_URL
       value: "https://security-token-service.nais.adeo.no/rest/v1/sts/ws/samltoken"
     - name: SECURITY_TOKEN_SERVICE_TOKEN_URL
       value: "https://security-token-service.nais.adeo.no/rest/v1/sts/token"
     - name: HENVENDELSE_DIALOG_V1_URL
       value: "https://modapp.adeo.no/henvendelse/services/domene.Virksomhet/Dialog_v1"
+    - name: SF_HENVENDELSE_URL
+      value: "https://sf-henvendelse.intern.nav.no/api"
+    - name: KODEVERK_URL
+      value: "https://kodeverk.nais.adeo.no/"
+    - name: PDL_URL
+      value: "https://pdl-api.nais.adeo.no/graphql"
+    - name: UNLEASH_API_URL
+      value: "https://unleash.nais.io/api/"
     - name: CXF_SECURE_LOG
       value: "enabled"

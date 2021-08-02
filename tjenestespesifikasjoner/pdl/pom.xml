@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>no.nav.dialogarena.henvendelsedialogv1</groupId>
+        <artifactId>tjenestespesifikasjoner</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>pdl</artifactId>
+
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <graphql-kotlin.version>3.6.8</graphql-kotlin.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.expediagroup</groupId>
+            <artifactId>graphql-kotlin-client</artifactId>
+            <version>${graphql-kotlin.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.expediagroup</groupId>
+                <artifactId>graphql-kotlin-maven-plugin</artifactId>
+                <version>${graphql-kotlin.version}</version>
+                <executions>
+                    <execution>
+                        <id>download schema from github</id>
+                        <goals>
+                            <goal>download-sdl</goal>
+                        </goals>
+                        <configuration>
+                            <endpoint>https://navikt.github.io/pdl/pdl-api-sdl.graphqls</endpoint>
+                            <outputDirectory>src/main/resources/pdl</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate kotlin classes from schema + queries</id>
+                        <goals>
+                            <goal>generate-client</goal>
+                        </goals>
+                        <configuration>
+                            <schemaFile>src/main/resources/pdl/schema.graphql</schemaFile>
+                            <packageName>no.nav.henvendelse.consumer.pdl.generated</packageName>
+                            <queryFileDirectory>src/main/resources/pdl/queries</queryFileDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <sourceDir>${project.basedir}/src/main/java</sourceDir>
+                                <sourceDir>${project.build.directory}/generated-sources/graphql</sourceDir>
+                            </sourceDirs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
