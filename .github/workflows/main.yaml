@@ -71,4 +71,3 @@ jobs:
           CLUSTER: prod-fss
           RESOURCE: .nais/prod.yaml
           VAR: version=${{ github.sha }}
-          DRY_RUN: true
