@@ -46,8 +46,8 @@ object AuthUtils {
 
     private fun Optional<SsoToken>.getAttribute(name: String): String? {
         return this.map { it.attributes }
-                .filter { it != null }
-                .map { it[name] as String? }
-                .orElse(null)
+            .filter { it != null }
+            .map { it[name] as String? }
+            .orElse(null)
     }
 }
