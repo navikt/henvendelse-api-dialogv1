@@ -36,7 +36,7 @@ object AuthUtils {
     fun assertNotProd() {
         val assumedProd = EnvironmentUtils.isProduction().orElse(true)
         if (assumedProd) {
-            throw ResponseStatusException(HttpStatus.FORBIDDEN, "Operasjon kan bare teses i preprod")
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "Operasjon kan bare testes i preprod")
         }
     }
 }
