@@ -15,8 +15,8 @@ object AuthUtils {
 
         if (ident == null) {
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "API kan ikke kalles uten innlogget bruker, men ble kalt med '$ident'")
-        } else if (identtype !== IdentType.Systemressurs) {
-            throw ResponseStatusException(HttpStatus.FORBIDDEN, "API kan bare brukes av Systemressurser, men ble kalt med '$identtype'")
+        } else if (identtype !== IdentType.InternBruker) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "API kan bare brukes av InternBrukere, men ble kalt med '$identtype'")
         }
         return Subject(ident, identtype)
     }
