@@ -57,6 +57,21 @@ jobs:
           RESOURCE: .nais/preprod.yaml
           VAR: version=${{ github.sha }}
 
+  deploy-q2:
+    name: Deploy to Q2
+    needs: build
+    if: github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          PRINT_PAYLOAD: true
+          CLUSTER: dev-fss
+          RESOURCE: .nais/preprod-q2.yaml
+          VAR: version=${{ github.sha }}
+
   deploy-prod:
     name: Deploy to prod
     needs: build
