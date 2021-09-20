@@ -22,7 +22,7 @@ class DialogWs(
     override fun hentDialoger(req: WSHentDialogerRequest): WSHentDialogerResponse {
         val (ident, identType) = AuthUtils.assertAccess()
 
-        val brukerSalesforce = unleash.isEnabled("modiabrukerdialog.bruker-salesforce-dialoger")
+        val brukerSalesforce = unleash.isEnabled("modia.dialogv1.bruker-salesforce-dialoger")
         log.info("$ident ($identType) henter ${req.antall ?: "N/A"} henvendelser via $brukerSalesforce [true=SF, false=henvendelse]")
 
         val source: DialogV1Service = if (brukerSalesforce) sfDialogSource else henvendelseDialogSource
