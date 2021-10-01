@@ -98,9 +98,9 @@ internal class AuthUtilsTest {
     @Test
     fun `kaster feil når identtype er systembruker og systemressurs ikke er godkjent`() {
         val subject = createSubject(
-            ident = "srvGosys",
+            ident = "srvUkjentSystem",
             identType = IdentType.Systemressurs,
-            consumerId = "srvGosys"
+            consumerId = "srvUkjentSystem"
         )
         SubjectHandler.withSubject(subject) {
             assertThat { AuthUtils.assertAccess() }
