@@ -17,6 +17,7 @@ import no.nav.tjeneste.virksomhet.dialog.v1.informasjon.WSHenvendelsestyper
 import no.nav.tjeneste.virksomhet.dialog.v1.informasjon.WSTemagrupper
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
+import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import java.time.OffsetDateTime
 import java.util.*
@@ -27,7 +28,9 @@ class SfDialogService(
     private val pdlService: PdlService,
     private val kodeverkService: KodeverkService
 ) : DialogV1Service {
+    val log = LoggerFactory.getLogger(SfDialogService::class.java)
     val SOSIALE_TEMAGRUPPER = listOf("OKSOS", "ANSOS")
+
     override fun hentDialoger(fnr: String, antall: Int?): List<WSDialog> {
         val aktorId: String = pdlService.hentAktorIder(fnr).firstNotNullOf { it }
 
@@ -67,8 +70,7 @@ class SfDialogService(
             .withTermnavn(kodeverkService.hentVerdi(Kodeverk.ARKIVTEMAER, henvendelseDTO.gjeldendeTema))
 
         return WSDialog()
-            // TODO Hva betyr det at kjedeId er null? Er det mulig? Samtalereferat?
-            .withBehandlingsKjedeId(requireNotNull(henvendelseDTO.kjedeId))
+            .withBehandlingsKjedeId(henvendelseDTO.kjedeId)
             .withHenvendelsestype(henvendelsetype)
             .withSisteDialogDato(sisteMeldingDTO.sendtDato.toJodaDateTime())
             .withTemagruppe(temagruppe)
@@ -90,7 +92,7 @@ class SfDialogService(
     }
 
     private fun erIkkeKassert(henvendelseDTO: HenvendelseDTO): Boolean {
-        // TODO Manglende kasserings dato, skal vi anta at det ikke er kassert? Blir forhåpentligvis fikset av strengere API
+        log.warn("Manglende kasserings dato for ${henvendelseDTO.kjedeId}, antar uendelig levetid for henvendelsen.")
         return OffsetDateTime.now().isBefore(henvendelseDTO.kasseringsDato ?: OffsetDateTime.MAX)
     }
 
