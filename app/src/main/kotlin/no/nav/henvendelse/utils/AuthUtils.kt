@@ -11,8 +11,8 @@ import java.util.*
 
 object AuthUtils {
     private val tjenestekallLogg = LoggerFactory.getLogger("SecureLog")
-    private val validConsumerIds = listOf("srvgosys", "srvpensjon")
-    private val validSystemResource = listOf("srvhenvendelsedialog", "srvgosys", "srvpensjon")
+    private val validConsumerIds = listOf("srvgosys", "srvpensjon", "srvbisys")
+    private val validSystemResource = listOf("srvhenvendelsedialog", "srvgosys", "srvpensjon", "srvbisys")
 
     data class Subject(val subject: String, val type: IdentType)
 
