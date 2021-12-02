@@ -23,7 +23,8 @@ class DialogWs(
         val (ident, identType) = AuthUtils.assertAccess()
 
         val brukerSalesforce = unleash.isEnabled("modia.dialogv1.bruker-salesforce-dialoger")
-        log.info("$ident ($identType) henter ${req.antall ?: "N/A"} henvendelser via $brukerSalesforce [true=SF, false=henvendelse]")
+        val kildesystem = if (brukerSalesforce) "SF" else "Henvendelse"
+        log.info("$ident ($identType) henter ${req.antall ?: "N/A"} henvendelser via $kildesystem")
 
         val source: DialogV1Service = if (brukerSalesforce) sfDialogSource else henvendelseDialogSource
         val dialoger: List<WSDialog> = source.hentDialoger(req.personIdent, req.antall)
