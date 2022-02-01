@@ -52,9 +52,8 @@ class SfDialogService(
 
     private fun tilDialog(fnr: String, henvendelseDTO: HenvendelseDTO): WSDialog {
         // TODO Hva betyr det at meldinger er null? Kan vi anta tom liste? Vil det kunne skje?
-        val sisteMeldingDTO: MeldingDTO = requireNotNull(henvendelseDTO.meldinger?.maxByOrNull { it.sendtDato })
-
-        val fraBruker = sisteMeldingDTO.fra.identType == MeldingFraDTO.IdentType.AKTORID
+        val meldinger = henvendelseDTO.meldinger?.sortedByDescending { it.sendtDato }
+        val sisteMeldingDTO: MeldingDTO = requireNotNull(meldinger?.firstOrNull())
 
         val legacyHenvendelseTyper = LegacyHenvendelseTyper.from(henvendelseDTO, sisteMeldingDTO)
         val henvendelsetype = WSHenvendelsestyper()
@@ -69,13 +68,21 @@ class SfDialogService(
             .withValue(henvendelseDTO.gjeldendeTema)
             .withTermnavn(kodeverkService.hentVerdi(Kodeverk.ARKIVTEMAER, henvendelseDTO.gjeldendeTema))
 
+        val fraBrukerEllerEnhet: String? = meldinger?.firstNotNullOfOrNull {
+            when (it.fra.identType) {
+                MeldingFraDTO.IdentType.AKTORID -> fnr
+                MeldingFraDTO.IdentType.NAVIDENT -> it.fra.navEnhet ?: "Ukjent enhet"
+                MeldingFraDTO.IdentType.SYSTEM -> null
+            }
+        }
+
         return WSDialog()
             .withBehandlingsKjedeId(henvendelseDTO.kjedeId)
             .withHenvendelsestype(henvendelsetype)
             .withSisteDialogDato(sisteMeldingDTO.sendtDato.toJodaDateTime())
             .withTemagruppe(temagruppe)
             .withArkivtema(arkivtema)
-            .withEnhet(if (fraBruker) fnr else sisteMeldingDTO.fra.navEnhet)
+            .withEnhet(fraBrukerEllerEnhet)
     }
 
     private fun OffsetDateTime.toJodaDateTime(): DateTime {
