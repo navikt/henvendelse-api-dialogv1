@@ -7,7 +7,7 @@ import no.nav.common.utils.EnvironmentUtils
 import no.nav.henvendelse.consumer.sfhenvendelse.generated.apis.HenvendelseInfoApi
 import no.nav.henvendelse.consumer.sfhenvendelse.generated.apis.KodeverkApi
 import no.nav.henvendelse.log
-import no.nav.henvendelse.service.dialog.SfDialogService
+import no.nav.henvendelse.service.dialog.DialogV1ServiceImpl
 import no.nav.henvendelse.service.kodeverk.KodeverkService
 import no.nav.henvendelse.service.pdl.PdlService
 import org.springframework.context.annotation.Bean
@@ -15,13 +15,13 @@ import org.springframework.context.annotation.Configuration
 import java.lang.StringBuilder
 
 @Configuration
-class SfDialogConfig {
+class DialogConfig {
     @Bean
     fun sfDialogService(
         stsService: SystemUserTokenProvider,
         pdlService: PdlService,
         kodeverkService: KodeverkService
-    ): SfDialogService {
+    ): DialogV1ServiceImpl {
         val url = EnvironmentUtils.getRequiredProperty("SF_HENVENDELSE_URL")
         val httpClient = RestClient.baseClient().newBuilder()
             .addInterceptor { chain ->
@@ -43,7 +43,7 @@ class SfDialogConfig {
             }
             .build()
 
-        return SfDialogService(
+        return DialogV1ServiceImpl(
             HenvendelseInfoApi(url, httpClient),
             KodeverkApi(url, httpClient),
             pdlService,
@@ -52,5 +52,5 @@ class SfDialogConfig {
     }
 
     @Bean
-    fun sfDialogServiceSelfTestCheck(sfDialogService: SfDialogService): SelfTestCheck = sfDialogService.selftestCheck
+    fun dialogServiceSelfTestCheck(dialogV1ServiceImpl: DialogV1ServiceImpl): SelfTestCheck = dialogV1ServiceImpl.selftestCheck
 }
