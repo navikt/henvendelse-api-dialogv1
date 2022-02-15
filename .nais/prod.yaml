@@ -54,8 +54,6 @@ spec:
       value: "https://security-token-service.nais.adeo.no/rest/v1/sts/ws/samltoken"
     - name: SECURITY_TOKEN_SERVICE_TOKEN_URL
       value: "https://security-token-service.nais.adeo.no/rest/v1/sts/token"
-    - name: HENVENDELSE_DIALOG_V1_URL
-      value: "https://modapp.adeo.no/henvendelse/services/domene.Virksomhet/Dialog_v1"
     - name: SF_HENVENDELSE_URL
       value: "https://sf-henvendelse.intern.nav.no/api"
     - name: KODEVERK_URL
