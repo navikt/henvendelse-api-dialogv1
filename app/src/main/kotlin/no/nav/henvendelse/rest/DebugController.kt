@@ -1,7 +1,6 @@
 package no.nav.henvendelse.rest
 
-import no.nav.henvendelse.service.dialog.HenvendelseDialogService
-import no.nav.henvendelse.service.dialog.SfDialogService
+import no.nav.henvendelse.service.dialog.DialogV1Service
 import no.nav.henvendelse.utils.AuthUtils
 import no.nav.tjeneste.virksomhet.dialog.v1.informasjon.WSDialog
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,20 +13,11 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/internal/debug")
 class DebugController {
     @Autowired
-    lateinit var henvendelse: HenvendelseDialogService
+    lateinit var dialogV1Service: DialogV1Service
 
-    @Autowired
-    lateinit var sfHenvendelse: SfDialogService
-
-    @GetMapping("/henvendelse")
-    fun hentFraHenvendelse(@RequestParam("fnr") fnr: String): List<WSDialog> {
-        AuthUtils.assertNotProd()
-        return henvendelse.hentDialoger(fnr, 5)
-    }
-
-    @GetMapping("/salesforce")
+    @GetMapping
     fun hentFraSalesforce(@RequestParam("fnr") fnr: String): List<WSDialog> {
         AuthUtils.assertNotProd()
-        return sfHenvendelse.hentDialoger(fnr, 5)
+        return dialogV1Service.hentDialoger(fnr, 5)
     }
 }
