@@ -612,7 +612,7 @@
         "properties": {
           "henvendelseType": {
             "type": "string",
-            "enum": ["SAMTALEREFERAT", "MELDINGSKJEDE"]
+            "enum": ["SAMTALEREFERAT", "MELDINGSKJEDE", "CHAT"]
           },
           "fnr": {
             "type": "string",
