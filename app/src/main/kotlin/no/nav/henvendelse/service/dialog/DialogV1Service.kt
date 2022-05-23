@@ -45,6 +45,7 @@ class DialogV1ServiceImpl(
                     .maxByOrNull { melding -> melding.sendtDato }
                     ?.sendtDato
             }
+            .filter(::erIkkeChat)
             .filter(::erIkkeKassert)
             .filter(::erIkkeFeilsendt)
             .filter(::erIkkeKontorsperret)
@@ -99,6 +100,10 @@ class DialogV1ServiceImpl(
             this.nano / 1_000_000,
             DateTimeZone.getDefault()
         )
+    }
+
+    private fun erIkkeChat(henvendelseDTO: HenvendelseDTO): Boolean {
+        return henvendelseDTO.henvendelseType !== HenvendelseDTO.HenvendelseType.CHAT
     }
 
     private fun erIkkeKassert(henvendelseDTO: HenvendelseDTO): Boolean {

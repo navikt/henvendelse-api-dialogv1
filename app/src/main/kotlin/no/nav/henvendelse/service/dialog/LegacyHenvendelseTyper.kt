@@ -31,6 +31,13 @@ enum class LegacyHenvendelseTyper(val behandlingsType: String) {
                         MeldingFraDTO.IdentType.SYSTEM -> SVAR_SKRIFTLIG
                     }
                 }
+                HenvendelseDTO.HenvendelseType.CHAT -> {
+                    when (melding.fra.identType) {
+                        MeldingFraDTO.IdentType.AKTORID -> if (erForsteMelding) SPORSMAL_SKRIFTLIG else SVAR_SBL_INNGAAENDE
+                        MeldingFraDTO.IdentType.NAVIDENT -> if (erForsteMelding) SPORSMAL_MODIA_UTGAAENDE else SVAR_SKRIFTLIG
+                        MeldingFraDTO.IdentType.SYSTEM -> SVAR_SKRIFTLIG
+                    }
+                }
             }
         }
     }
