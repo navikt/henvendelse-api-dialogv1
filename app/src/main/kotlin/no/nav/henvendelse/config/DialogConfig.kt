@@ -10,6 +10,7 @@ import no.nav.henvendelse.log
 import no.nav.henvendelse.service.dialog.DialogV1ServiceImpl
 import no.nav.henvendelse.service.kodeverk.KodeverkService
 import no.nav.henvendelse.service.pdl.PdlService
+import no.nav.henvendelse.utils.AuthUtils
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import java.lang.StringBuilder
@@ -39,6 +40,9 @@ class DialogConfig {
             .addInterceptor { chain ->
                 val builder = chain.request().newBuilder()
                 builder.addHeader("Authorization", "Bearer ${stsService.systemUserToken}")
+                AuthUtils.ifInternUser { ident ->
+                    builder.addHeader("Nav-Ident", ident)
+                }
                 chain.proceed(builder.build())
             }
             .build()
