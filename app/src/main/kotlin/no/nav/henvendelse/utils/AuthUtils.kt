@@ -33,6 +33,13 @@ object AuthUtils {
         return Subject(ident, identtype)
     }
 
+    fun ifInternUser(block: (ident: String) -> Unit) {
+        val (ident, identtype) = assertAccess()
+        if (identtype == IdentType.InternBruker) {
+            block(ident)
+        }
+    }
+
     fun assertNotProd() {
         val assumedProd = EnvironmentUtils.isProduction().orElse(true)
         if (assumedProd) {
