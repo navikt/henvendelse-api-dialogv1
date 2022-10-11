@@ -19,5 +19,9 @@ class JacksonUtils {
                 )
                 enable(SerializationFeature.INDENT_OUTPUT)
             }
+
+        fun toJson(value: Any?): String? {
+            return value?.let(objectMapper::writeValueAsString)
+        }
     }
 }
