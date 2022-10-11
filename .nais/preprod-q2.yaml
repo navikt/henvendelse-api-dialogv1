@@ -4,6 +4,8 @@ apiVersion: nais.io/v1alpha1
 metadata:
   name: henvendelse-api-dialogv1-q2
   namespace: teamnks
+  labels:
+    team: teamnks
 spec:
   image: "{{ image }}"
   port: 8080
