@@ -3,9 +3,7 @@ kind: Application
 apiVersion: nais.io/v1alpha1
 metadata:
   name: henvendelse-api-dialogv1
-  namespace: personoversikt
-  labels:
-    team: personoversikt
+  namespace: teamnks
 spec:
   image: "{{ image }}"
   port: 8080
