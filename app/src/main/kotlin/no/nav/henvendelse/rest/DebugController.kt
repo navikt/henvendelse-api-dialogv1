@@ -18,6 +18,7 @@ class DebugController {
     @GetMapping
     fun hentFraSalesforce(@RequestParam("fnr") fnr: String): List<WSDialog> {
         AuthUtils.assertNotProd()
+        AuthUtils.assertAccess()
         return dialogV1Service.hentDialoger(fnr, 5)
     }
 }

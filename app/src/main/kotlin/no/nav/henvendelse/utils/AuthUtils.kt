@@ -34,10 +34,12 @@ object AuthUtils {
     }
 
     fun ifInternUser(block: (ident: String) -> Unit) {
-        val (ident, identtype) = assertAccess()
-        if (identtype == IdentType.InternBruker) {
-            block(ident)
-        }
+        try {
+            val (ident, identtype) = assertAccess()
+            if (identtype == IdentType.InternBruker) {
+                block(ident)
+            }
+        } catch (_: Throwable) {}
     }
 
     fun assertNotProd() {
