@@ -5,16 +5,26 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.PlainJWT
-import no.nav.common.json.JsonUtils
 import no.nav.common.nais.NaisYamlUtils.loadFromYaml
 import no.nav.common.test.ssl.SSLTestUtils
+import no.nav.common.utils.EnvironmentUtils.NAIS_CLUSTER_NAME_PROPERTY_NAME
 import no.nav.common.utils.SslUtils
+import no.nav.henvendelse.consumer.kodeverk.generated.models.GetKodeverkKoderBetydningerResponseDTO
 import no.nav.henvendelse.consumer.pdl.generated.HentAktorId
+import no.nav.henvendelse.consumer.sfhenvendelse.generated.models.HenvendelseDTO
+import no.nav.henvendelse.consumer.sfhenvendelse.generated.models.MeldingDTO
+import no.nav.henvendelse.consumer.sfhenvendelse.generated.models.MeldingFraDTO
+import no.nav.henvendelse.service.kodeverk.Kodeverk
+import no.nav.henvendelse.utils.JacksonUtils
 import org.springframework.boot.SpringApplication
+import java.time.OffsetDateTime
 import java.util.*
 
 fun main(args: Array<String>) {
-    loadVaultSecrets()
+    System.setProperty(NAIS_CLUSTER_NAME_PROPERTY_NAME, "dev-fss")
+    System.setProperty(SERVICEUSER_USERNAME_PROPERTY, "dummy")
+    System.setProperty(SERVICEUSER_PASSWORD_PROPERTY, "dummy")
+
     loadFromYaml(".nais/preprod.yaml")
     SslUtils.setupTruststore()
     SSLTestUtils.disableCertificateChecks()
@@ -26,26 +36,23 @@ fun main(args: Array<String>) {
     application.run(*args)
 }
 
-private fun loadVaultSecrets() {
-    System.setProperty(SERVICEUSER_USERNAME_PROPERTY, "dummy")
-    System.setProperty(SERVICEUSER_PASSWORD_PROPERTY, "dummy")
-}
-
 private fun startExternalMocks(): WireMockServer {
     val server = WireMockServer()
     server.start()
     server.also(::addStsMock)
     server.also(::addPdlMock)
+    server.also(::addKodeverkMock)
+    server.also(::addSalesforceMock)
     return server
 }
 
 private fun addStsMock(server: WireMockServer) {
-    val oidcConfig = JsonUtils.toJson(
+    val oidcConfig = JacksonUtils.toJson(
         mapOf(
             "token_endpoint" to "http://localhost:${server.port()}/token"
         )
     )
-    val accessToken = JsonUtils.toJson(
+    val accessToken = JacksonUtils.toJson(
         mapOf(
             "access_token" to PlainJWT(
                 JWTClaimsSet.Builder()
@@ -76,7 +83,7 @@ private fun addPdlMock(server: WireMockServer) {
             .willReturn(aResponse().withStatus(200))
     )
 
-    val body = JsonUtils.toJson(
+    val body = JacksonUtils.toJson(
         GraphQLResponse(
             errors = null,
             data = HentAktorId.Result(
@@ -87,8 +94,74 @@ private fun addPdlMock(server: WireMockServer) {
         )
     )
     server.stubFor(
-        get(urlPathEqualTo("/pdl/graphql"))
+        post(urlPathEqualTo("/pdl/graphql"))
             .willReturn(aResponse().withStatus(200).withBody(body))
     )
     System.setProperty("PDL_URL", "http://localhost:${server.port()}/pdl/graphql")
+}
+
+private fun addKodeverkMock(server: WireMockServer) {
+    val response = aResponse()
+        .withStatus(200)
+        .withHeader("Content-Type", "application/json")
+        .withBody(JacksonUtils.toJson(GetKodeverkKoderBetydningerResponseDTO(emptyMap())))
+
+    for (kodeverk in Kodeverk.values()) {
+        server.stubFor(
+            get(urlPathEqualTo("/api/v1/kodeverk/${kodeverk.kodeverknavn}/koder/betydninger"))
+                .willReturn(response)
+        )
+    }
+
+    System.setProperty("KODEVERK_URL", "http://localhost:${server.port()}")
+}
+
+private fun addSalesforceMock(server: WireMockServer) {
+    val kodeverkResponse = aResponse()
+        .withStatus(200)
+        .withHeader("Content-Type", "application/json")
+        .withBody(JacksonUtils.toJson(emptyList<String>()))
+
+    server.stubFor(
+        get(urlPathEqualTo("/henvendelse/kodeverk/temagrupper"))
+            .willReturn(kodeverkResponse)
+    )
+
+    val henvendelse = HenvendelseDTO(
+        kjedeId = "ABBA1001",
+        henvendelseType = HenvendelseDTO.HenvendelseType.SAMTALEREFERAT,
+        fnr = "12345679810",
+        aktorId = "987654321987",
+        opprettetDato = OffsetDateTime.now(),
+        kontorsperre = false,
+        feilsendt = false,
+        meldinger = listOf(
+            MeldingDTO(
+                sendtDato = OffsetDateTime.now(),
+                fra = MeldingFraDTO(
+                    ident = "12345678910",
+                    identType = MeldingFraDTO.IdentType.AKTORID
+                ),
+                fritekst = "Noe random innhold"
+            )
+        )
+    )
+
+    val henvendelseResponse = aResponse()
+        .withStatus(200)
+        .withHeader("Content-Type", "application/json")
+        .withBody(
+            JacksonUtils.toJson(
+                listOf(
+                    henvendelse
+                )
+            )
+        )
+
+    server.stubFor(
+        get(urlPathEqualTo("/henvendelseinfo/henvendelseliste"))
+            .willReturn(henvendelseResponse)
+    )
+
+    System.setProperty("SF_HENVENDELSE_URL", "http://localhost:${server.port()}")
 }

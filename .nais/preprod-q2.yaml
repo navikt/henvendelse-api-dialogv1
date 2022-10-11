@@ -3,9 +3,9 @@ kind: Application
 apiVersion: nais.io/v1alpha1
 metadata:
   name: henvendelse-api-dialogv1-q2
-  namespace: personoversikt
+  namespace: teamnks
   labels:
-    team: personoversikt
+    team: teamnks
 spec:
   image: "{{ image }}"
   port: 8080
@@ -38,6 +38,13 @@ spec:
     min: 2
     max: 4
     cpuThresholdPercentage: 50
+  azure:
+    application:
+      enabled: true
+      tenant: trygdeetaten.no
+      claims:
+        extra:
+          - "NAVident"
   vault:
     enabled: true
     paths:
