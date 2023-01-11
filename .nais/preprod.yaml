@@ -34,6 +34,7 @@ spec:
       memory: 768Mi
   ingresses:
     - https://app-q1.adeo.no/henvendelse-api-dialogv1
+    - "https://henvendelse-api-dialogv1.dev.intern.nav.no"
   replicas:
     min: 2
     max: 4
