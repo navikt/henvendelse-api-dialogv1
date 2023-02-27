@@ -19,6 +19,6 @@ class DebugController {
     fun hentFraSalesforce(@RequestParam("fnr") fnr: String): List<WSDialog> {
         AuthUtils.assertNotProd()
         AuthUtils.assertAccess()
-        return dialogV1Service.hentDialoger(fnr, 5)
+        return dialogV1Service.hentDialoger(fnr, 5, "internal debug")
     }
 }

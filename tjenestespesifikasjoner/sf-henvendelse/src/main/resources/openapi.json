@@ -281,6 +281,9 @@
           },
           {
             "$ref": "#/components/parameters/X-Correlation-ID"
+          },
+          {
+            "$ref": "#/components/parameters/X-Proxy-Ref"
           }
         ],
         "responses": {
@@ -857,6 +860,15 @@
         "in": "header",
         "required": true,
         "description": "Unik UUID for inkommende request",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "X-Proxy-Ref": {
+        "name": "X-Proxy-Ref",
+        "in": "header",
+        "required": false,
+        "description": "Proxy ref",
         "schema": {
           "type": "string"
         }

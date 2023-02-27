@@ -13,9 +13,10 @@ import org.springframework.stereotype.Service
 class DialogWs(val dialogService: DialogV1Service) : DialogV1 {
     override fun hentDialoger(req: WSHentDialogerRequest): WSHentDialogerResponse {
         val (ident, identType) = AuthUtils.assertAccess()
-        log.info("Uthenting gjort av $ident ($identType)")
+        val consumerId = AuthUtils.getConsumerId()
+        log.info("Uthenting gjort av $ident ($identType), consumerId $consumerId")
 
-        val dialoger: List<WSDialog> = dialogService.hentDialoger(req.personIdent, req.antall)
+        val dialoger: List<WSDialog> = dialogService.hentDialoger(req.personIdent, req.antall, consumerId)
         return WSHentDialogerResponse()
             .withDialogListe(dialoger)
     }
