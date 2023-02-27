@@ -8,13 +8,14 @@ import no.nav.tjeneste.virksomhet.dialog.v1.informasjon.WSDialog
 import no.nav.tjeneste.virksomhet.dialog.v1.meldinger.WSHentDialogerRequest
 import no.nav.tjeneste.virksomhet.dialog.v1.meldinger.WSHentDialogerResponse
 import org.springframework.stereotype.Service
+import java.io.File
 
 @Service
 class DialogWs(val dialogService: DialogV1Service) : DialogV1 {
     override fun hentDialoger(req: WSHentDialogerRequest): WSHentDialogerResponse {
         val (ident, identType) = AuthUtils.assertAccess()
         log.info("Uthenting gjort av $ident ($identType)")
-
+        File("/tmp/latesthentdialoger").writeText("Uthenting gjort av $ident ($identType)")
         val dialoger: List<WSDialog> = dialogService.hentDialoger(req.personIdent, req.antall)
         return WSHentDialogerResponse()
             .withDialogListe(dialoger)
@@ -22,6 +23,7 @@ class DialogWs(val dialogService: DialogV1Service) : DialogV1 {
 
     override fun ping() {
         val (ident, identType) = AuthUtils.assertAccess()
+        File("/tmp/latestping").writeText("Ping gjort av $ident ($identType)")
         log.info("Ping gjort av $ident ($identType)")
     }
 }
