@@ -33,8 +33,8 @@ object AuthUtils {
         return Subject(ident, identtype)
     }
 
-    fun getConsumerId() : String {
-        return SubjectHandler.getSsoToken().getAttribute("consumerId")?:"unknown"
+    fun getConsumerId(): String {
+        return SubjectHandler.getSsoToken().getAttribute("consumerId") ?: "unknown"
     }
 
     fun ifInternUser(block: (ident: String) -> Unit) {

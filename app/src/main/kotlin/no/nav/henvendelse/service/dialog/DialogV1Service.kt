@@ -35,7 +35,7 @@ class DialogV1ServiceImpl(
     val log = LoggerFactory.getLogger(DialogV1ServiceImpl::class.java)
     val SOSIALE_TEMAGRUPPER = listOf("OKSOS", "ANSOS")
 
-    override fun hentDialoger(fnr: String, antall: Int?, proxyRef : String): List<WSDialog> {
+    override fun hentDialoger(fnr: String, antall: Int?, proxyRef: String): List<WSDialog> {
         val aktorId: String = pdlService.hentAktorIder(fnr).firstNotNullOf { it }
 
         return sfHenvendelse.henvendelseinfoHenvendelselisteGet(aktorId, callId(), proxyRef)
