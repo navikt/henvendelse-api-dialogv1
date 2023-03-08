@@ -62,8 +62,6 @@ spec:
     - name: SECURITY_TOKEN_SERVICE_TOKEN_URL
       value: "https://security-token-service.nais.adeo.no/rest/v1/sts/token"
     - name: SF_HENVENDELSE_URL
-      value: "https://sf-henvendelse.intern.nav.no/api"
-    - name: SF_HENVENDELSE_URL_ALT
       value: "https://sf-henvendelse-api-proxy.intern.nav.no/api"
     - name: KODEVERK_URL
       value: "https://kodeverk.nais.adeo.no/"
