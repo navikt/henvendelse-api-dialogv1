@@ -23,7 +23,7 @@ import java.time.OffsetDateTime
 import java.util.*
 
 interface DialogV1Service {
-    fun hentDialoger(fnr: String, antall: Int?): List<WSDialog>
+    fun hentDialoger(fnr: String, antall: Int?, proxyRef: String): List<WSDialog>
 }
 
 class DialogV1ServiceImpl(
@@ -35,10 +35,10 @@ class DialogV1ServiceImpl(
     val log = LoggerFactory.getLogger(DialogV1ServiceImpl::class.java)
     val SOSIALE_TEMAGRUPPER = listOf("OKSOS", "ANSOS")
 
-    override fun hentDialoger(fnr: String, antall: Int?): List<WSDialog> {
+    override fun hentDialoger(fnr: String, antall: Int?, proxyRef: String): List<WSDialog> {
         val aktorId: String = pdlService.hentAktorIder(fnr).firstNotNullOf { it }
 
-        return sfHenvendelse.henvendelseinfoHenvendelselisteGet(aktorId, callId())
+        return sfHenvendelse.henvendelseinfoHenvendelselisteGet(aktorId, callId(), proxyRef)
             .asSequence()
             .sortedByDescending {
                 (it.meldinger ?: emptyList())
