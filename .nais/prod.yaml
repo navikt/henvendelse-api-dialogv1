@@ -64,7 +64,7 @@ spec:
     - name: SF_HENVENDELSE_URL
       value: "https://sf-henvendelse.intern.nav.no/api"
     - name: SF_HENVENDELSE_URL_ALT
-      value: "https://sf-henvendelse.intern.nav.no/api"
+      value: "https://sf-henvendelse-api-proxy.intern.nav.no/api"
     - name: KODEVERK_URL
       value: "https://kodeverk.nais.adeo.no/"
     - name: PDL_URL
