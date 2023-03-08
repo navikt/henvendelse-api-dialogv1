@@ -24,6 +24,7 @@ class DialogConfig {
         kodeverkService: KodeverkService
     ): DialogV1ServiceImpl {
         val url = EnvironmentUtils.getRequiredProperty("SF_HENVENDELSE_URL")
+        val urlAlt = EnvironmentUtils.getRequiredProperty("SF_HENVENDELSE_URL_ALT")
         val httpClient = RestClient.baseClient().newBuilder()
             .addInterceptor { chain ->
                 val request = chain.request()
@@ -49,6 +50,7 @@ class DialogConfig {
 
         return DialogV1ServiceImpl(
             HenvendelseInfoApi(url, httpClient),
+            HenvendelseInfoApi(urlAlt, httpClient),
             KodeverkApi(url, httpClient),
             pdlService,
             kodeverkService

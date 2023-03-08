@@ -19,6 +19,7 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
+import java.io.File
 import java.time.OffsetDateTime
 import java.util.*
 
@@ -28,6 +29,7 @@ interface DialogV1Service {
 
 class DialogV1ServiceImpl(
     private val sfHenvendelse: HenvendelseInfoApi,
+    private val sfHenvendelseAlt: HenvendelseInfoApi,
     private val sfKodeverk: KodeverkApi,
     private val pdlService: PdlService,
     private val kodeverkService: KodeverkService
@@ -37,6 +39,11 @@ class DialogV1ServiceImpl(
 
     override fun hentDialoger(fnr: String, antall: Int?, proxyRef: String): List<WSDialog> {
         val aktorId: String = pdlService.hentAktorIder(fnr).firstNotNullOf { it }
+
+        try {
+            val altResult = sfHenvendelseAlt.henvendelseinfoHenvendelselisteGet(aktorId, callId(), proxyRef)
+            File("/tmp/altResult").writeText(altResult.toString())
+        } catch ( e: Exception) {}
 
         return sfHenvendelse.henvendelseinfoHenvendelselisteGet(aktorId, callId(), proxyRef)
             .asSequence()
