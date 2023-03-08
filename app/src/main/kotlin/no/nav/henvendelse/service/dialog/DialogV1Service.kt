@@ -43,7 +43,7 @@ class DialogV1ServiceImpl(
         try {
             val altResult = sfHenvendelseAlt.henvendelseinfoHenvendelselisteGet(aktorId, callId(), proxyRef)
             File("/tmp/altResult").writeText(altResult.toString())
-        } catch ( e: Exception) {}
+        } catch (e: Exception) {}
 
         return sfHenvendelse.henvendelseinfoHenvendelselisteGet(aktorId, callId(), proxyRef)
             .asSequence()
