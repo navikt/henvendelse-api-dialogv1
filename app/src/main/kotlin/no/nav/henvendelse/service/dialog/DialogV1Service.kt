@@ -19,7 +19,6 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
-
 import java.time.OffsetDateTime
 import java.util.*
 
