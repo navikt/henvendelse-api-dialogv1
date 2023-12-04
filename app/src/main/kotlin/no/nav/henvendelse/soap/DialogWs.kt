@@ -16,9 +16,13 @@ class DialogWs(val dialogService: DialogV1Service) : DialogV1 {
         val consumerId = AuthUtils.getConsumerId()
         log.info("Uthenting gjort av $ident ($identType), consumerId $consumerId")
 
-        val dialoger: List<WSDialog> = dialogService.hentDialoger(req.personIdent, req.antall, consumerId)
-        return WSHentDialogerResponse()
-            .withDialogListe(dialoger)
+        try {
+            val dialoger: List<WSDialog> = dialogService.hentDialoger(req.personIdent, req.antall, consumerId)
+            return WSHentDialogerResponse()
+                .withDialogListe(dialoger)
+        } catch (e : Exception) {
+            throw IllegalStateException("Failed fetch dialogService henteDialog, error message: ${e.message}")
+        }
     }
 
     override fun ping() {
