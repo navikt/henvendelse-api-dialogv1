@@ -20,7 +20,7 @@ class DialogWs(val dialogService: DialogV1Service) : DialogV1 {
             val dialoger: List<WSDialog> = dialogService.hentDialoger(req.personIdent, req.antall, consumerId)
             return WSHentDialogerResponse()
                 .withDialogListe(dialoger)
-        } catch (e : Exception) {
+        } catch (e: Exception) {
             throw IllegalStateException("Failed fetch dialogService henteDialog, error message: ${e.message}")
         }
     }
