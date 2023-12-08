@@ -21,6 +21,7 @@ class DialogWs(val dialogService: DialogV1Service) : DialogV1 {
             return WSHentDialogerResponse()
                 .withDialogListe(dialoger)
         } catch (e: Exception) {
+            log.error("Failed fetch dialogService henteDialog, error message: ${e.message}")
             throw IllegalStateException("Failed fetch dialogService henteDialog, error message: ${e.message}")
         }
     }
